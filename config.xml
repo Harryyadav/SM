@@ -4,7 +4,7 @@
 		id        = "com.ionicframework.ngCordovaDemoUnique"
 		versionCode=""
 		version   = "">
-		<name>SKDA</name>
+		<name>SKDelivery</name>
 	    <plugin name="cordova-plugin-whitelist" spec="1" />
 	    <access origin="*" />
 	    <allow-intent href="http://*/*" />

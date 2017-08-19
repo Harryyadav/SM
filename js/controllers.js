@@ -171,9 +171,9 @@
         });
         //window.location = "#/home";
         var url = serviceBase + "api/DBSignup";
-        debugger;
+        
         $http.post(url, data).then(function (results) {
-            debugger;
+            
             results.data;
             $scope.hide();
             if (results.data == "Wrong Password") {
@@ -286,7 +286,7 @@
         document.getElementById(id).style.display = "none";
     }
     $scope.Accept = function (data) {
-        debugger;
+        
         var url = serviceBase + "api/DeliveryIssuance";
 
         data.Acceptance = true;
@@ -917,7 +917,7 @@
     };
  
     $scope.stoptimer = function () {
-        debugger;
+        
         $scope.$parent.stoptimerapp();
     }
     $scope.Starttimer = function () {
@@ -2373,7 +2373,7 @@
         };
 
         self.stopTimer = function () {
-            debugger;
+            
             self.Tasks1 = localStorageService.get('Tasks');
             if (self.Tasks1 != null) {
                 if (self.Tasks1.length > 0) {
