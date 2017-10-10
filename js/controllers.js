@@ -1,4 +1,4 @@
-﻿angular.module('app.controllers', ["LocalStorageModule"])
+angular.module('app.controllers', ["LocalStorageModule"])
 
 .controller('AppCtrl', function ($http, $scope, $ionicActionSheet, $timeout, $state, $window, $rootScope, ngAuthSettings, $ionicLoading, $ionicPopup, TaskService, localStorageService) {
     var serviceBase = ngAuthSettings.apiServiceBaseUri;
@@ -7,7 +7,7 @@
     $scope.hide = function () {
         $ionicLoading.hide();
     };
-
+    
     /*---map----*/
     /*---Get gps coodinates----*/
     function showPosition(position) {
@@ -33,27 +33,27 @@
             var d = new Date();
             var hr = d.getHours();
             //if (hr > 9 && hr < 21) {
-            var latlong = getLocation();
-            var url = serviceBase + "api/GpsController/GpsUpdate";
-            if ($scope.lat == 0) {
-                StartOrEnd = "Start";
-                $scope.lat = 22.704765;
-                $scope.lan = 75.825104;
-            } else {
-                StartOrEnd = ""
-            }
-            console.log("mytimer:-" + $scope.lat, $scope.lan);
-            var dataToPost = {
-                DeliveryBoyId: $scope.ClientData.PeopleID,
-                lat: $scope.lat,
-                lg: $scope.lan,
-                StartOrEnd: StartOrEnd
-            };
-            $http.post(url, dataToPost)
-            .success(function (data) {
-            })
-             .error(function (data) {
-             })
+                var latlong = getLocation();
+                var url = serviceBase + "api/GpsController/GpsUpdate";
+                if ($scope.lat == 0) {
+                    StartOrEnd = "Start";
+                    $scope.lat = 22.704765;
+                    $scope.lan = 75.825104;
+                } else {
+                    StartOrEnd = ""
+                }
+                console.log("mytimer:-"+$scope.lat, $scope.lan);
+                var dataToPost = {
+                    DeliveryBoyId: $scope.ClientData.PeopleID,
+                    lat: $scope.lat,
+                    lg: $scope.lan,
+                    StartOrEnd: StartOrEnd
+                };
+                $http.post(url, dataToPost)
+                .success(function (data) {
+                })
+                 .error(function (data) {
+                 })
             //}
         }
     }
@@ -92,13 +92,13 @@
                 lg: 75.825104,
                 StartOrEnd: "End"
             };
-
+            
             $http.post(url, dataToPost)
             .success(function (data) {
                 window.location.reload();
             })
              .error(function (data) {
-
+                 
              })
             window.location.reload();
         }
@@ -106,7 +106,7 @@
     });
     $scope.stopNcleartasks = function () {
         $scope.Tasks1 = localStorageService.get('Tasks');
-        if ($scope.Tasks1 != null) {
+        if ($scope.Tasks1!=null) {
             if ($scope.Tasks1.length > 0) {
                 for (var i = 0; i < $scope.Tasks1.length; i++) {
                     if ($scope.Tasks1[i].Status == "Delivered" || $scope.Tasks1[i].Status == "Delivery Canceled" || $scope.Tasks1[i].Status == "Delivery Redispatch") {
@@ -123,7 +123,7 @@
         if ($scope.ClientData != null) {
             $http.get(serviceBase + "api/DeliveryTask?mob=" + $scope.ClientData.Mobile).then(function (results) {
                 $scope.Tasks = results.data;
-
+                
                 localStorageService.set("Tasks", results.data);
                 $scope.hide();
                 window.location = "#/task";
@@ -171,9 +171,7 @@
         });
         //window.location = "#/home";
         var url = serviceBase + "api/DBSignup";
-        
         $http.post(url, data).then(function (results) {
-            
             results.data;
             $scope.hide();
             if (results.data == "Wrong Password") {
@@ -217,7 +215,6 @@
 
 .controller('AssignedProductsCtrl', function ($scope, $timeout, $http, $rootScope, ngAuthSettings, localStorageService, $ionicActionSheet, $state, $window, $ionicHistory, $ionicLoading, $ionicPopup) {
     var serviceBase = ngAuthSettings.apiServiceBaseUri;
-  
     $scope.hide = function () {
         $ionicLoading.hide();
     };
@@ -228,11 +225,10 @@
             window.location = "#/login";
         }
         $scope.showassignments = $scope.$parent.showassignments;
-
+        
     });
     $scope.DeliveryIssuance = [];
     $scope.getclosedissuance = function () {
-        
         $scope.ClientData = localStorageService.get('clientData');
         if ($scope.ClientData != null && $scope.showassignments) {
             $ionicLoading.show({
@@ -242,9 +238,7 @@
             });
             var url = serviceBase + "api/DeliveryIssuance?all=0&id=" + $scope.ClientData.PeopleID;
             $http.get(url).then(function (results) {
-             
                 $scope.DeliveryIssuance = results.data;
-               
                 $scope.hide();
                 $scope.oldissuelist = true;
             });
@@ -252,7 +246,6 @@
 
     }
     $scope.getisuancelist = function () {
-      
         $ionicLoading.show({
             noBackdrop: false,
             template: '<p>Loading...</p><ion-spinner icon="android"></ion-spinner>',
@@ -260,19 +253,12 @@
         });
         $scope.ClientData = localStorageService.get('clientData');
         if ($scope.ClientData != null && $scope.showassignments) {
-     
             var url = serviceBase + "api/DeliveryIssuance?id=" + $scope.ClientData.PeopleID;
             $http.get(url).then(function (results) {
-          
                 $scope.oldissuelist = false;
                 $scope.DeliveryIssuance = results.data;
-                localStorageService.set('Iddel', results.data[0].DeliveryIssuanceId );
-                console.log(" $scope.DeliveryIssuance", $scope.DeliveryIssuance);
                 $scope.hide();
             });
-        
-            $scope.DeliveryIssuance = localStorageService.get('Iddel');
-            console.log(" $scope.DeliveryIssuance", $scope.DeliveryIssuance);
         }
 
     }
@@ -286,16 +272,12 @@
         document.getElementById(id).style.display = "none";
     }
     $scope.Accept = function (data) {
-        
         var url = serviceBase + "api/DeliveryIssuance";
-
         data.Acceptance = true;
-        
         $ionicLoading.show({
             noBackdrop: false,
             template: '<p>Loading...</p><ion-spinner icon="android"></ion-spinner>',
         });
-        
         $http.put(url, data)
         .success(function (data) {
             $scope.hide();
@@ -383,7 +365,6 @@
 
 .controller('taskCtrl', function ($http, $scope, $ionicActionSheet, $timeout, $state, $window, $rootScope, ngAuthSettings, $ionicHistory, TaskService, localStorageService, $ionicLoading, $ionicPopup) {
     /// calling delivery tasks
-
     $scope.ClientData = localStorageService.get('clientData');
     $scope.$on("$ionicView.enter", function () {
         $scope.ClientData = localStorageService.get('clientData');
@@ -392,8 +373,6 @@
         } else { $scope.gettasks(); }
 
         $scope.stp = $scope.$parent.stopNcleartasks();
-
-        $scope.currencystp = $scope.$parent.stopNcleartasks();
     });
     $scope.hide = function () {
         $ionicLoading.hide();
@@ -470,8 +449,8 @@
                         //$window.location.reload(true);
                         $window.location.href = ('#/login');
                         return true;
-
-
+                        
+                            
                 }
             }
         });
@@ -481,22 +460,29 @@
         }, 9000);
     };
     $scope.gettaskdetails = function (data) {
+        debugger;
         // (data.Status != "Delivered" || data.Status != "Delivery Redispatch" || data.Status != "Delivery Canceled")
         if (data.Status == "Delivered") {
-            //$ionicPopup.alert({
-            //    title: 'Alert',
-            //    template: 'Already Delivered!'
-            //}).then(function () {
-            //});
-            //return;
             TaskService._setdata(data);
             $window.location.href = ('#/TaskHistoryDetails/' + data.OrderId);
         } else if ($scope.$parent.starttasks) {
             //if (data.Status == "Shipped") {
-            TaskService._setdata(data);
-            $window.location.href = ('#/taskDetails/' + data.OrderId);
-            //}
+            $scope.getOrdData = function () {
 
+                $scope.data = {};
+                var url = serviceBase + 'api/DeliveryTask/OrderDetail?OrderId=' + data.OrderId;
+                $http.get(url).then(function (results) {
+                    $scope.data= results.data[0];
+                    debugger;
+                    TaskService._setdata($scope.data);
+                    debugger;
+                    $window.location.href = ('#/taskDetails/' + data.OrderId);
+                }, function (error) {
+                })
+            };
+            $scope.getOrdData();
+            //}
+            
         } else {
             $ionicPopup.alert({
                 title: 'चेतावनी',
@@ -514,31 +500,29 @@
         });
     }
     //$scope.gettaskOL();
-    //$scope.getcurrency = function () {
-    //    window.location = "#/OrderCurrency";
-    //}
 
 })
 
-.controller('taskdetailsCtrl', function ($http, localStorageService, $ionicModal, $stateParams, $scope, $ionicActionSheet, $timeout, $state, $window, $rootScope, ngAuthSettings, TaskService, $ionicPopup, $ionicLoading) {
+.controller('taskdetailsCtrl', function ($http, localStorageService,$ionicModal, $stateParams, $scope, $ionicActionSheet, $timeout, $state, $window, $rootScope, ngAuthSettings, TaskService, $ionicPopup, $ionicLoading) {
     var serviceBase = ngAuthSettings.apiServiceBaseUri;
- 
+    debugger;
     $scope.tgshow = true;
     $scope.id = $stateParams.type;
     $scope.details = TaskService._getDetail();
+    debugger;
     $scope.hide = function () {
         $ionicLoading.hide();
     };
     $scope.delivered = function (data) {
         if (data.Status == "Products Dispatched" || data.Status == "" || data.Status == "Shipped") {
-            // alert("Select Status");
+           // alert("Select Status");
             $ionicPopup.alert({
                 title: 'चेतावनी',
                 template: 'Status चयन करे !'
             }).then(function () {
             });
         }
-
+        
         if (data.Status == "Delivery Redispatch" || data.Status == "Delivery Canceled") {
             if (data.comments != "") {
                 var url = serviceBase + "api/DeliveryTask";
@@ -552,54 +536,54 @@
                 }
                 var confirmPopup = $ionicPopup.confirm({
                     title: 'चेतावनी',
-                    template: 'क्या आप वाकई ' + ' ' + data.Status + ' करना  चाहते हैं? '
+                    template: 'क्या आप वाकई ' + ' ' + data.Status +  ' करना  चाहते हैं? '
                 });
 
                 confirmPopup.then(function (res) {
-                    if (res) {
-                        data["Signimg"] = $scope.Signimg;
-                        $http.post(url, data)
-                            .success(function (data, status) {
-                                $scope.hide();
-                                $ionicPopup.alert({
-                                    title: 'Alert',
-                                    template: data.Status + '!'
-                                }).then(function () {
-                                });
-                                $rootScope.$broadcast('orderaction', 'Two');
-                                $scope.Tasks = localStorageService.get('Tasks');
-                                if ($scope.Tasks != null) {
-                                    for (var i = 0; i < $scope.Tasks.length; i++) {
-                                        if ($scope.Tasks[i].OrderDispatchedMasterId == data.OrderDispatchedMasterId) {
-                                            $scope.Tasks[i].Status = data.Status;
-                                            $scope.Tasks[i].CheckAmount = data.CheckAmount;
-                                            $scope.Tasks[i].CheckNo = data.CheckNo;
-                                            $scope.Tasks[i].ElectronicAmount = data.ElectronicAmount;
-                                            $scope.Tasks[i].ElectronicPaymentNo = data.ElectronicPaymentNo;
-                                            $scope.Tasks[i].CashAmount = data.CashAmount;
-                                            $scope.Tasks[i].ReDispatchCount = data.ReDispatchCount;
-                                            $scope.Tasks[i].comments = data.comments;
-                                        }
-                                    }
-                                    localStorageService.set("Tasks", $scope.Tasks);
+                if (res) {
+                    data["Signimg"] = $scope.Signimg;
+                $http.post(url, data)
+                    .success(function (data, status) {
+                        $scope.hide();
+                        $ionicPopup.alert({
+                            title: 'Alert',
+                            template: data.Status + '!'
+                        }).then(function () {
+                        });
+                        $rootScope.$broadcast('orderaction', 'Two');
+                        $scope.Tasks = localStorageService.get('Tasks');
+                        if ($scope.Tasks != null) {
+                            for (var i = 0; i < $scope.Tasks.length; i++) {
+                                if ($scope.Tasks[i].OrderDispatchedMasterId == data.OrderDispatchedMasterId) {
+                                    $scope.Tasks[i].Status = data.Status;
+                                    $scope.Tasks[i].CheckAmount = data.CheckAmount;
+                                    $scope.Tasks[i].CheckNo = data.CheckNo;
+                                    $scope.Tasks[i].ElectronicAmount = data.ElectronicAmount;
+                                    $scope.Tasks[i].ElectronicPaymentNo = data.ElectronicPaymentNo;
+                                    $scope.Tasks[i].CashAmount = data.CashAmount;
+                                    $scope.Tasks[i].ReDispatchCount = data.ReDispatchCount;
+                                    $scope.Tasks[i].comments = data.comments;
                                 }
-                                window.location = "#/task";
-                            }).error(function () {
-                                $scope.hide();
-                                window.location = "#/task";
-                                $ionicPopup.alert({
-                                    title: 'Alert',
-                                    template: 'Error Occured!'
-                                }).then(function () {
-                                });
-                            });
-                        console.log('You are sure');
+                            }
+                            localStorageService.set("Tasks", $scope.Tasks);
+                        }
+                        window.location = "#/task";
+                    }).error(function () {
+                        $scope.hide();
+                        window.location = "#/task";
+                        $ionicPopup.alert({
+                            title: 'Alert',
+                            template: 'Error Occured!'
+                        }).then(function () {
+                        });
+                    });
+                console.log('You are sure');
                     }
                     else {
                         console.log('You are not sure');
                     }
                 })
-
+                
             } else {
                 $ionicPopup.alert({
                     title: 'चेतावनी',
@@ -692,14 +676,14 @@
                       }).then(function () {
                       });
                   });
-                        console.log('You are sure');
-                    } else {
-                        console.log('You are not sure');
-                    }
+                    console.log('You are sure');
+                } else {
+                    console.log('You are not sure');
+                }
                 })
-
+               
             } else {
-
+               
                 $ionicPopup.alert({
                     title: 'चेतावनी',
                     template: 'प्राप्त राशि के बिल के बराबर नहीं है !'
@@ -728,7 +712,7 @@
     savePNGButton = wrapper.querySelector("[data-action=save-png]"),
     canvas = wrapper.querySelector("canvas"),
     signaturePad;
-    function resizeCanvas() {
+     function resizeCanvas() {
         var ratio = Math.max(window.devicePixelRatio || 1, 1);
         canvas.width = canvas.offsetWidth * ratio;
         canvas.height = canvas.offsetHeight * ratio;
@@ -749,12 +733,11 @@
             console.log($scope.Signimg);
         }
     });
-
+   
 })
 
 .controller('taskHistoryCtrl', function ($http, $scope, $ionicActionSheet, $timeout, $state, $window, $rootScope, ngAuthSettings, $ionicHistory, TaskService, localStorageService, $ionicLoading, $ionicPopup) {
     /// calling delivery tasks
-
     $scope.ClientData = localStorageService.get('clientData');
     $scope.$on("$ionicView.enter", function () {
         $scope.ClientData = localStorageService.get('clientData');
@@ -769,7 +752,7 @@
     $scope.hide = function () {
         $ionicLoading.hide();
     };
-
+    
 
 
     var serviceBase = ngAuthSettings.apiServiceBaseUri;
@@ -860,11 +843,10 @@
 })
 
 .controller('taskHistoryDetailsCtrl', function ($http, localStorageService, $stateParams, $scope, $ionicActionSheet, $timeout, $state, $window, $rootScope, ngAuthSettings, TaskService, $ionicPopup) {
-
     var serviceBase = ngAuthSettings.apiServiceBaseUri;
     $scope.id = $stateParams.type;
     $scope.details = TaskService._getDetail();
-
+    
     $scope.$on("$ionicView.enter", function () {
         $scope.ClientData = localStorageService.get('clientData');
         if ($scope.ClientData == null) {
@@ -915,9 +897,7 @@
             hideSheet();
         }, 9000);
     };
- 
     $scope.stoptimer = function () {
-        
         $scope.$parent.stoptimerapp();
     }
     $scope.Starttimer = function () {
@@ -1035,388 +1015,388 @@
     $scope.details = TaskService._getDetail();
 })
 .controller('routeCtrl', function ($http, $scope, $ionicActionSheet, $timeout, $state, $window, $rootScope, ngAuthSettings, TaskService, localStorageService, $ionicLoading, $ionicHistory, $interval) {
-    $scope.showMap = true;
-    $scope.showList = true;
-    $scope.ClientData = localStorageService.get('clientData');
-    var serviceBase = ngAuthSettings.apiServiceBaseUri;
-    $scope.ClientData.PeopleID;
-    var AddressCalculated = [];
-    var AddressFinal = [];
-    var Visited = [];
-    var AddressCollection = [{ 'name': 'one', 'lat': 22.708468, 'long': 75.855092, 'origin': true, 'visited': true, 'live': false },
-        { 'name': 'two', 'lat': 22.738468, 'long': 75.865092, 'origin': false, 'visited': false, 'live': false },
-        { 'name': 'three', 'lat': 22.758468, 'long': 75.875092, 'origin': false, 'visited': false, 'live': false },
-        { 'name': 'four', 'lat': 22.778468, 'long': 75.875092, 'origin': false, 'visited': false, 'live': false },
-        { 'name': 'five', 'lat': 22.718468, 'long': 75.885092, 'origin': false, 'visited': false, 'live': false },
-        { 'name': 'six', 'lat': 22.798468, 'long': 75.895092, 'origin': false, 'visited': false, 'live': false }]
-    $scope.lat = 0;
-    $scope.lan = 0;
-    var map, currentPositionMarker, mapCenter = new google.maps.LatLng(22.708468, 75.855092), map;
-    function getMax(arr) {
-        var min;
-        var obj;
-        for (var i = 0 ; i < arr.length ; i++) {
-            if (arr[i] != undefined) {
-                if (!min || parseInt(arr[i].distance) < parseInt(min)) {
-                    min = arr[i].distance;
-                    obj = arr[i];
+        $scope.showMap = true;
+        $scope.showList = true;
+        $scope.ClientData = localStorageService.get('clientData');
+        var serviceBase = ngAuthSettings.apiServiceBaseUri;
+        $scope.ClientData.PeopleID;
+        var AddressCalculated = [];
+        var AddressFinal = [];
+        var Visited = [];
+        var AddressCollection = [{ 'name': 'one', 'lat': 22.708468, 'long': 75.855092, 'origin': true, 'visited': true, 'live': false },
+            { 'name': 'two', 'lat': 22.738468, 'long': 75.865092, 'origin': false, 'visited': false, 'live': false },
+            { 'name': 'three', 'lat': 22.758468, 'long': 75.875092, 'origin': false, 'visited': false, 'live': false },
+            { 'name': 'four', 'lat': 22.778468, 'long': 75.875092, 'origin': false, 'visited': false, 'live': false },
+            { 'name': 'five', 'lat': 22.718468, 'long': 75.885092, 'origin': false, 'visited': false, 'live': false },
+            { 'name': 'six', 'lat': 22.798468, 'long': 75.895092, 'origin': false, 'visited': false, 'live': false }]
+        $scope.lat = 0;
+        $scope.lan = 0;
+        var map,currentPositionMarker,mapCenter = new google.maps.LatLng(22.708468, 75.855092),map;
+        function getMax(arr) {
+            var min;
+            var obj;
+            for (var i = 0 ; i < arr.length ; i++) {
+                if (arr[i] != undefined) {
+                    if (!min || parseInt(arr[i].distance) < parseInt(min)) {
+                        min = arr[i].distance;
+                        obj = arr[i];
+                    }
                 }
             }
-        }
-        return obj;
-    }
-    //   httpGet('http://maps.googleapis.com/maps/api/directions/json?origin=Toronto&destination=Montreal&sensor=false');
-
-    function httpGet(addr1, addr2) {
-        var obj = { 'source': '', 'destination': '', 'distance': 0, 'minimum': false };
-        var xmlHttp = new XMLHttpRequest();
-        xmlHttp.open("GET", 'https://maps.googleapis.com/maps/api/directions/json?origin=' + addr1.lat + ',' + addr1.long + '&destination=' + addr2.lat + ',' + addr2.long + '&sensor=false', false); // false for synchronous request
-        xmlHttp.send(null);
-        var jsn = JSON.parse(xmlHttp.responseText);
-        if (jsn.routes != undefined && jsn.routes.length != 0) {
-            var leg = jsn.routes[0].legs;
-            var val = leg[0].distance.value;
-            obj.distance = val;
-            obj.source = addr1;
-            obj.destination = addr2;
             return obj;
-            // draw(addr1, addr2, obj);
         }
-    }
-    $scope.withoutorigin = [];
-    $scope.start = [];
-    function draw() {
+        //   httpGet('http://maps.googleapis.com/maps/api/directions/json?origin=Toronto&destination=Montreal&sensor=false');
+
+        function httpGet(addr1, addr2) {
+            var obj = { 'source': '', 'destination': '', 'distance': 0, 'minimum': false };
+            var xmlHttp = new XMLHttpRequest();
+            xmlHttp.open("GET", 'https://maps.googleapis.com/maps/api/directions/json?origin=' + addr1.lat + ',' + addr1.long + '&destination=' + addr2.lat + ',' + addr2.long + '&sensor=false', false); // false for synchronous request
+            xmlHttp.send(null);
+            var jsn = JSON.parse(xmlHttp.responseText);
+            if (jsn.routes != undefined && jsn.routes.length != 0) {
+                var leg = jsn.routes[0].legs;
+                var val = leg[0].distance.value;
+                obj.distance = val;
+                obj.source = addr1;
+                obj.destination = addr2;
+                return obj;
+                // draw(addr1, addr2, obj);
+            }
+        }
         $scope.withoutorigin = [];
-        //  google.maps.event.addDomListener(window, 'load', initialize1);
-        $scope.origin = { lat: originAddress.lat, lng: originAddress.long };
-        $scope.origin.stopover = true;
-        $scope.destination = { lat: originAddress.lat, lng: originAddress.long };
-        $scope.destination.stopover = false;
-        $rootScope.wayPoints = [];
+        $scope.start = [];
+        function draw() {
+            $scope.withoutorigin = [];
+            //  google.maps.event.addDomListener(window, 'load', initialize1);
+            $scope.origin = { lat: originAddress.lat, lng: originAddress.long };
+            $scope.origin.stopover = true;
+            $scope.destination = { lat: originAddress.lat, lng: originAddress.long };
+            $scope.destination.stopover = false;
+            $rootScope.wayPoints = [];
 
-        var k = 0;
-        for (var i = 0; i < AddressFinal.length; i++) {
-            if (AddressFinal[i].path.destination.origin != true) {
-                var obj = { location: { lat: 0, lng: 0 }, stopover: false };
-                obj.location.lat = AddressFinal[i].path.destination.lat;
-                obj.location.lng = AddressFinal[i].path.destination.long;
-                $rootScope.wayPoints.push(obj);
-                var objt = { name: '', position: [0, 0], id: 0 };
-                var num = k + 1;
-                objt.name = num.toString();
-                objt.id = AddressFinal[i].path.destination.name;
-                objt.position[0] = AddressFinal[i].path.destination.lat;
-                objt.position[1] = AddressFinal[i].path.destination.long;
-                $scope.withoutorigin.push(objt);
-                k = k + 1;
+            var k = 0;
+            for (var i = 0; i < AddressFinal.length; i++) {
+                if (AddressFinal[i].path.destination.origin != true) {
+                    var obj = { location: { lat: 0, lng: 0 }, stopover: false };
+                    obj.location.lat = AddressFinal[i].path.destination.lat;
+                    obj.location.lng = AddressFinal[i].path.destination.long;
+                    $rootScope.wayPoints.push(obj);
+                    var objt = { name: '', position: [0, 0], id: 0 };
+                    var num = k + 1;
+                    objt.name = num.toString();
+                    objt.id = AddressFinal[i].path.destination.name;
+                    objt.position[0] = AddressFinal[i].path.destination.lat;
+                    objt.position[1] = AddressFinal[i].path.destination.long;
+                    $scope.withoutorigin.push(objt);
+                    k = k + 1;
+                }
+            }
+            initLocationProcedure();
+        }
+        $scope.Tasks = [];
+        $scope.hide = function () {
+            $ionicLoading.hide();
+        };
+        $scope.start = function () {
+            if ($scope.ClientData == null) {
+                window.location = "#/login";
+            } else {
+                $ionicLoading.show({
+                    noBackdrop: false,
+                    template: '<p>Loading...</p><ion-spinner icon="android"></ion-spinner>',
+                    //duration: 200//Optional
+                });
+                $http.get(serviceBase + "api/DeliveryTask?mob=" + $scope.ClientData.Mobile).then(function (results) {
+                    AddressCollection = [];
+                    var org = { 'name': 'one', 'lat': 22.704765, 'long': 75.825104, 'origin': true, 'visited': true, 'live': false };
+                    AddressCollection.push(org);
+                    $scope.Tasks = results.data;
+                    for (var i = 0; i < $scope.Tasks.length; i++) {
+                        if ($scope.Tasks[i].lat != 0) {
+                            var obj = { 'name': '', 'lat': 0, 'long': 0, 'origin': false, 'visited': false, 'live': false };
+                            obj.name = $scope.Tasks[i].OrderId;
+                            obj.lat = $scope.Tasks[i].lat;
+                            obj.long = $scope.Tasks[i].lg;
+                            AddressCollection.push(obj);
+                        }
+                    }
+                    $scope.hide();
+                    $timeout(function () {
+                        startMap();
+                    }, 1000);
+                })
+
+                //By MK
+                //AddressCollection = [];
+                ////for origin
+                //var org = { 'name': 'one', 'lat': 22.704765, 'long': 75.825104, 'origin': true, 'visited': true, 'live': false };
+                //AddressCollection.push(org);
+                //$scope.Tasks = localStorageService.get('Tasks');
+                //if ($scope.Tasks != null) {
+                //    for (var i = 0; i < $scope.Tasks.length; i++) {
+                //        var obj = { 'name': '', 'lat': 0, 'long': 0, 'origin': false, 'visited': false, 'live': false };
+                //        obj.name = $scope.Tasks[i].OrderId;
+                //        obj.lat = $scope.Tasks[i].lat;
+                //        obj.long = $scope.Tasks[i].lg;
+                //        AddressCollection.push(obj);
+                //    }
+                //    $scope.hide();
+                //    $timeout(function () {
+                //        startMap();
+                //    }, 1000);
+                //} else {
+                //    $timeout(function () {
+                //        startMap();
+                //    }, 1000);
+                //}
             }
         }
-        initLocationProcedure();
-    }
-    $scope.Tasks = [];
-    $scope.hide = function () {
-        $ionicLoading.hide();
-    };
-    $scope.start = function () {
-        if ($scope.ClientData == null) {
-            window.location = "#/login";
-        } else {
-            $ionicLoading.show({
-                noBackdrop: false,
-                template: '<p>Loading...</p><ion-spinner icon="android"></ion-spinner>',
-                //duration: 200//Optional
+        $scope.clickMarker = function (data) {
+            debugger;
+            console.log(data);
+            var obj = GetSingleTask(data.id);
+            TaskService._setdata(obj);
+            $window.location.href = ('#/taskDetails/' + obj.OrderId);
+        }
+        function GetSingleTask(id) {
+            for (var i = 0; i < $scope.Tasks.length; i++) {
+                if ($scope.Tasks[i].OrderId = id) {
+                    return $scope.Tasks[i];
+                }
+            }
+        }
+        $scope.showdetails = function () {
+            var hideSheet = $ionicActionSheet.show({
+                buttons: [
+                     { text: '<i class="ion-person space"></i>Profile' },
+                     { text: '<i class="ion-ios-help-outline space"></i>Tasks' },
+                     { text: '<i class="ion-information space"></i>Assignments' },
+                     { text: '<i class="ion-log-out icon_colour12 space"></i>Logout' }
+                ],
+                titleText: 'Info',
+                cancelText: 'Cancel',
+                cancel: function () {
+                },
+                buttonClicked: function (index) {
+                    switch (index) {
+                        case 0:
+                            $state.go('Profile');
+                            $window.location.href = ('#/profile');
+                            break;
+                        case 1:
+                            $state.go('task');
+                            $window.location.href = ('#/task');
+                            break;
+                        case 2:
+                            $state.go('AssignedProducts');
+                            $window.location.href = ('#/AssignedProducts');
+                            break;
+                        case 3:
+                            $rootScope.$broadcast('stop', 'Two');
+                            $ionicHistory.clearHistory();
+                            $ionicHistory.clearCache();
+                            window.localStorage.clear();
+                            $window.location.reload(true);
+                            $state.go('app.signup');
+                            break;
+                            return true;
+                    }
+                }
             });
-            $http.get(serviceBase + "api/DeliveryTask?mob=" + $scope.ClientData.Mobile).then(function (results) {
-                AddressCollection = [];
-                var org = { 'name': 'one', 'lat': 22.704765, 'long': 75.825104, 'origin': true, 'visited': true, 'live': false };
-                AddressCollection.push(org);
-                $scope.Tasks = results.data;
-                for (var i = 0; i < $scope.Tasks.length; i++) {
-                    if ($scope.Tasks[i].lat != 0) {
-                        var obj = { 'name': '', 'lat': 0, 'long': 0, 'origin': false, 'visited': false, 'live': false };
-                        obj.name = $scope.Tasks[i].OrderId;
-                        obj.lat = $scope.Tasks[i].lat;
-                        obj.long = $scope.Tasks[i].lg;
-                        AddressCollection.push(obj);
-                    }
-                }
-                $scope.hide();
-                $timeout(function () {
-                    startMap();
-                }, 1000);
-            })
-
-            //By MK
-            //AddressCollection = [];
-            ////for origin
-            //var org = { 'name': 'one', 'lat': 22.704765, 'long': 75.825104, 'origin': true, 'visited': true, 'live': false };
-            //AddressCollection.push(org);
-            //$scope.Tasks = localStorageService.get('Tasks');
-            //if ($scope.Tasks != null) {
-            //    for (var i = 0; i < $scope.Tasks.length; i++) {
-            //        var obj = { 'name': '', 'lat': 0, 'long': 0, 'origin': false, 'visited': false, 'live': false };
-            //        obj.name = $scope.Tasks[i].OrderId;
-            //        obj.lat = $scope.Tasks[i].lat;
-            //        obj.long = $scope.Tasks[i].lg;
-            //        AddressCollection.push(obj);
-            //    }
-            //    $scope.hide();
-            //    $timeout(function () {
-            //        startMap();
-            //    }, 1000);
-            //} else {
-            //    $timeout(function () {
-            //        startMap();
-            //    }, 1000);
-            //}
+            // For example's sake, hide the sheet after two seconds
+            $timeout(function () {
+                hideSheet();
+            }, 9000);
+        };
+        /*---map----*/
+        $rootScope.logLatLng = function (e) {
+           
         }
-    }
-    $scope.clickMarker = function (data) {
-        
-        console.log(data);
-        var obj = GetSingleTask(data.id);
-        TaskService._setdata(obj);
-        $window.location.href = ('#/taskDetails/' + obj.OrderId);
-    }
-    function GetSingleTask(id) {
-        for (var i = 0; i < $scope.Tasks.length; i++) {
-            if ($scope.Tasks[i].OrderId = id) {
-                return $scope.Tasks[i];
-            }
-        }
-    }
-    $scope.showdetails = function () {
-        var hideSheet = $ionicActionSheet.show({
-            buttons: [
-                 { text: '<i class="ion-person space"></i>Profile' },
-                 { text: '<i class="ion-ios-help-outline space"></i>Tasks' },
-                 { text: '<i class="ion-information space"></i>Assignments' },
-                 { text: '<i class="ion-log-out icon_colour12 space"></i>Logout' }
-            ],
-            titleText: 'Info',
-            cancelText: 'Cancel',
-            cancel: function () {
-            },
-            buttonClicked: function (index) {
-                switch (index) {
-                    case 0:
-                        $state.go('Profile');
-                        $window.location.href = ('#/profile');
-                        break;
-                    case 1:
-                        $state.go('task');
-                        $window.location.href = ('#/task');
-                        break;
-                    case 2:
-                        $state.go('AssignedProducts');
-                        $window.location.href = ('#/AssignedProducts');
-                        break;
-                    case 3:
-                        $rootScope.$broadcast('stop', 'Two');
-                        $ionicHistory.clearHistory();
-                        $ionicHistory.clearCache();
-                        window.localStorage.clear();
-                        $window.location.reload(true);
-                        $state.go('app.signup');
-                        break;
-                        return true;
-                }
-            }
-        });
-        // For example's sake, hide the sheet after two seconds
-        $timeout(function () {
-            hideSheet();
-        }, 9000);
-    };
-    /*---map----*/
-    $rootScope.logLatLng = function (e) {
-
-    }
-    $rootScope.wayPoints = [
-      { location: { lat: 44.32384807250689, lng: -78.079833984375 }, stopover: true },
-      { location: { lat: 44.55916341529184, lng: -76.17919921875 }, stopover: true },
-      { location: { lat: 44.75916341529184, lng: -76.27919921875 }, stopover: true }
-    ];
-    /*---map----*/
-    var originAddress;
-    function startMap() {
-        for (var i = 0; i < AddressCollection.length; i++) {
-            if (AddressCollection[i].origin == true) {
-                var temp;
-                originAddress = AddressCollection[i];
-                for (var j = 0; j < AddressCollection.length; j++) {
-                    if (AddressCollection[i].name != AddressCollection[j].name && AddressCollection[j].visited == false) {
-                        temp = AddressCollection[j];
-                        AddressCollection[i].visited == true;
-                        var obj = httpGet(AddressCollection[i], AddressCollection[j]);
-                        AddressCalculated.push(obj);
-                    }
-                }
-                var tempObj = { 'source': '' }
-                var min = getMax(AddressCalculated);
-                tempObj.source = AddressCollection[i];
-                tempObj.name = AddressCollection[i].name;
-                Visited.push(AddressCollection[i]);
-                tempObj.path = min;
-                AddressFinal.push(tempObj);
-                next(min.destination);
-
-            }
-        }
-
-    }
-    $scope.myGoBack = function () {
-        $ionicHistory.goBack();
-    };
-    function check() {
-        var ret = true;
-        var allength = AddressCollection.length;
-
-        var visyedlength = Visited.length;
-        if (visyedlength == allength) {
-            return false;
-        }
-        return ret;
-    }
-    function last(val) {
-        var ret = false;
-        var allength = AddressCollection.length;
-        allength = allength - 1;
-        var visyedlength = Visited.length;
-        if (visyedlength == allength) {
-            return true;
-        }
-        return ret;
-    }
-    function exist(val) {
-        var ret = false;
-
-        for (var k = 0; k < Visited.length; k++) {
-
-            if (val.name == Visited[k].name) {
-                ret = true;
-
-            }
-
-
-        }
-        return ret;
-    }
-    function next(val) {
-        for (var i = 0; i < AddressCollection.length; i++) {
-            if (AddressCollection[i].name == val.name) {
-                AddressCalculated = [];
-                var again = false;
-                var calc = false;
-                var temp;
-                for (var j = 0; j < AddressCollection.length; j++) {
-
-                    if (AddressCollection[i].name != AddressCollection[j].name && AddressCollection[j].visited == false) {
-                        var ex = exist(AddressCollection[j]);
-                        var lst = last(AddressCollection[i]);
-                        if (ex == false && lst == false) {
-
-
+        $rootScope.wayPoints = [
+          { location: { lat: 44.32384807250689, lng: -78.079833984375 }, stopover: true },
+          { location: { lat: 44.55916341529184, lng: -76.17919921875 }, stopover: true },
+          { location: { lat: 44.75916341529184, lng: -76.27919921875 }, stopover: true }
+        ];
+        /*---map----*/
+        var originAddress;
+        function startMap() {
+            for (var i = 0; i < AddressCollection.length; i++) {
+                if (AddressCollection[i].origin == true) {
+                    var temp;
+                    originAddress = AddressCollection[i];
+                    for (var j = 0; j < AddressCollection.length; j++) {
+                        if (AddressCollection[i].name != AddressCollection[j].name && AddressCollection[j].visited == false) {
                             temp = AddressCollection[j];
                             AddressCollection[i].visited == true;
-
-
                             var obj = httpGet(AddressCollection[i], AddressCollection[j]);
-                            calc = true;
-
                             AddressCalculated.push(obj);
                         }
-                        if (lst == true) {
-
-                            temp = originAddress
-                            AddressCollection[i].visited == true;
-
-
-                            var obj = httpGet(AddressCollection[i], originAddress);
-                            //calc = true;
-                            draw();
-                            //  AddressCalculated.push(obj);
-                        }
-
-
-
-
                     }
-
-                }
-
-                if (calc == true) {
-
-
                     var tempObj = { 'source': '' }
                     var min = getMax(AddressCalculated);
                     tempObj.source = AddressCollection[i];
+                    tempObj.name = AddressCollection[i].name;
+                    Visited.push(AddressCollection[i]);
                     tempObj.path = min;
                     AddressFinal.push(tempObj);
-                    Visited.push(AddressCollection[i]);
-                    again = check();
-                    if (again == true) {
-                        next(min.destination);
-                    }
-                    else {
-                        draw();
-                    }
+                    next(min.destination);
+
+                }
+            }
+
+        }
+        $scope.myGoBack = function () {
+            $ionicHistory.goBack();
+        };
+        function check() {
+            var ret = true;
+            var allength = AddressCollection.length;
+
+            var visyedlength = Visited.length;
+            if (visyedlength == allength) {
+                return false;
+            }
+            return ret;
+        }
+        function last(val) {
+            var ret = false;
+            var allength = AddressCollection.length;
+            allength = allength - 1;
+            var visyedlength = Visited.length;
+            if (visyedlength == allength) {
+                return true;
+            }
+            return ret;
+        }
+        function exist(val) {
+            var ret = false;
+
+            for (var k = 0; k < Visited.length; k++) {
+
+                if (val.name == Visited[k].name) {
+                    ret = true;
+
                 }
 
+
+            }
+            return ret;
+        }
+        function next(val) {
+            for (var i = 0; i < AddressCollection.length; i++) {
+                if (AddressCollection[i].name == val.name) {
+                    AddressCalculated = [];
+                    var again = false;
+                    var calc = false;
+                    var temp;
+                    for (var j = 0; j < AddressCollection.length; j++) {
+
+                        if (AddressCollection[i].name != AddressCollection[j].name && AddressCollection[j].visited == false) {
+                            var ex = exist(AddressCollection[j]);
+                            var lst = last(AddressCollection[i]);
+                            if (ex == false && lst == false) {
+
+
+                                temp = AddressCollection[j];
+                                AddressCollection[i].visited == true;
+
+
+                                var obj = httpGet(AddressCollection[i], AddressCollection[j]);
+                                calc = true;
+
+                                AddressCalculated.push(obj);
+                            }
+                            if (lst == true) {
+
+                                temp = originAddress
+                                AddressCollection[i].visited == true;
+
+
+                                var obj = httpGet(AddressCollection[i], originAddress);
+                                //calc = true;
+                                draw();
+                                //  AddressCalculated.push(obj);
+                            }
+
+
+
+
+                        }
+
+                    }
+
+                    if (calc == true) {
+
+
+                        var tempObj = { 'source': '' }
+                        var min = getMax(AddressCalculated);
+                        tempObj.source = AddressCollection[i];
+                        tempObj.path = min;
+                        AddressFinal.push(tempObj);
+                        Visited.push(AddressCollection[i]);
+                        again = check();
+                        if (again == true) {
+                            next(min.destination);
+                        }
+                        else {
+                            draw();
+                        }
+                    }
+
+                }
             }
         }
-    }
-    function locError(error) {
-        // the current position could not be located
-        alert("The current position could not be found!");
-    }
-    function setCurrentPosition(pos) {
-        currentPositionMarker = new google.maps.Marker({
-            map: map,
-            position: new google.maps.LatLng(
-                pos.coords.latitude,
-                pos.coords.longitude
-            ),
-            title: "Current Position"
-        });
-        map.panTo(new google.maps.LatLng(
-                pos.coords.latitude,
-                pos.coords.longitude
-            ));
-    }
-    function displayAndWatch(position) {
-        // set current position
-        setCurrentPosition(position);
-        // watch position
-        watchCurrentPosition();
-    }
-    function watchCurrentPosition() {
-        var positionTimer = navigator.geolocation.watchPosition(
-            function (position) {
-                setMarkerPosition(
-                    currentPositionMarker,
-                    position
-                );
-            });
-    }
-    function setMarkerPosition(marker, position) {
-        marker.setPosition(
-            new google.maps.LatLng(
-                position.coords.latitude,
-                position.coords.longitude)
-        );
-    }
-    function initLocationProcedure() {
-
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(displayAndWatch, locError);
-        } else {
-            alert("Your browser does not support the Geolocation API");
+        function locError(error) {
+            // the current position could not be located
+            alert("The current position could not be found!");
         }
-    }
+        function setCurrentPosition(pos) {
+            currentPositionMarker = new google.maps.Marker({
+                map: map,
+                position: new google.maps.LatLng(
+                    pos.coords.latitude,
+                    pos.coords.longitude
+                ),
+                title: "Current Position"
+            });
+            map.panTo(new google.maps.LatLng(
+                    pos.coords.latitude,
+                    pos.coords.longitude
+                ));
+        }
+        function displayAndWatch(position) {
+            // set current position
+            setCurrentPosition(position);
+            // watch position
+            watchCurrentPosition();
+        }
+        function watchCurrentPosition() {
+            var positionTimer = navigator.geolocation.watchPosition(
+                function (position) {
+                    setMarkerPosition(
+                        currentPositionMarker,
+                        position
+                    );
+                });
+        }
+        function setMarkerPosition(marker, position) {
+            marker.setPosition(
+                new google.maps.LatLng(
+                    position.coords.latitude,
+                    position.coords.longitude)
+            );
+        }
+        function initLocationProcedure() {
+
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(displayAndWatch, locError);
+            } else {
+                alert("Your browser does not support the Geolocation API");
+            }
+        }
 
 
-})
+    })
 .controller('homeCtrl', function ($scope, $ionicActionSheet, localStorageService, ngAuthSettings, $http, $timeout, $state, $window, $rootScope, $ionicPopup) {
     $scope.showMap = true;
     $scope.showList = true;
@@ -1480,7 +1460,7 @@
 
     /*---map----*/
     $rootScope.logLatLng = function (e) {
-
+      
     }
     $rootScope.wayPoints = [
       { location: { lat: 24.0005155, lng: 77.75093029999994 }, stopover: true }
@@ -1920,7 +1900,6 @@
     }
 })
 .controller('SignatureCtrl', function ($scope, $ionicPopup) {
-
     $scope.showdetails = function () {
         var hideSheet = $ionicActionSheet.show({
             buttons: [
@@ -1962,8 +1941,8 @@
             hideSheet();
         }, 9000);
     };
-
-
+   
+   
     setTimeout(function () {
         $(function () {
             var canvas = document.getElementById('thecanvas');
@@ -2003,9 +1982,10 @@
 .controller('settingCtrl', function ($scope, $ionicPopup) {
 
 })
+
+
 .controller('AssismentCtrl', function ($http, $scope, $ionicActionSheet, $timeout, $state, $window, $rootScope, ngAuthSettings, $ionicHistory, TaskService, localStorageService, $ionicLoading, $ionicPopup) {
     /// calling delivery tasks
- 
     $scope.ClientData = localStorageService.get('clientData');
     $scope.$on("$ionicView.enter", function () {
         $scope.ClientData = localStorageService.get('clientData');
@@ -2024,7 +2004,7 @@
     var serviceBase = ngAuthSettings.apiServiceBaseUri;
 
     $scope.getoldorders = function () {
-
+  
         if ($scope.ClientData == null) {
             window.location = "#/login";
         } else {
@@ -2045,7 +2025,7 @@
             $http.get(serviceBase + "api/DeliveryIssuance?id=" + $scope.ClientData.PeopleID + "&start=" + start + "&end=" + end).then(function (results) {
                
                 $scope.oldorders = results.data;
-
+                
                 if (results.data.length == 0) {
                     $ionicPopup.alert({
                         title: 'Alert',
@@ -2055,13 +2035,13 @@
                 }
                 $scope.hide();
             }, function (results) { $scope.hide(); });
-
-
+        
+      
         }
     }
 
     $scope.prodetails = function (items) {
-        
+        debugger;
         $scope.DBoyData = {};
         $scope.orderdetails = [];
         $scope.Orderids = [];
@@ -2085,7 +2065,7 @@
             console.log('Thank you for not eating my delicious ice cream cone');
         });
 
-
+       
 
     }
 
@@ -2144,6 +2124,7 @@
     }
 
 })
+
 .controller('SummaryCtrl', function ($http, localStorageService, $stateParams, $scope, $ionicActionSheet, $timeout, $state, $window, $rootScope, ngAuthSettings, TaskService, $ionicPopup) {
     $scope.delivereddata = [];
     $scope.cancelddata = [];
@@ -2153,13 +2134,12 @@
     $scope.assignment = TaskService._getDetail();
     console.log($scope.assignment);
 
-    if ($scope.assignment != null && $scope.id > 0) {
-  
+    if ($scope.assignment != null && $scope.id >0) {
         var ids = $scope.assignment.OrderIds;
         var url = serviceBase + "api/vehicleassissment?ids=" + ids + "&testt=" + "testt";
         $http.get(url)
         .success(function (data) {
-            
+            debugger;
             $scope.TotalDeliveredOrder = 0;
             $scope.TotalDeliveredOrderAmount = 0;
             $scope.TotalDeliveredCashAmount = 0;
@@ -2193,8 +2173,8 @@
                 $scope.TotalDeliveredCashAmount = $scope.TotalDeliveredCashAmount + $scope.delivereddata[d].cashAmount;
                 $scope.TotalDeliveredChequeAmount = $scope.TotalDeliveredChequeAmount + $scope.delivereddata[d].chequeAmount;
             }
-
-
+  
+           
             for (var i = 0; i < data.length; i++) {
                 if (data[i].Status == "Delivery Canceled") {
 
@@ -2242,7 +2222,7 @@
                 console.log("Assissment total products");
                 console.log($scope.allproducts);
             }
-
+          
             for (var i = 0; i < data.length; i++) {
                 if (data[i].Status == "Delivery Redispatch") {
 
@@ -2306,6 +2286,8 @@
         }
     });
 })
+
+
 .filter('stopwatchTime', function () {
     return function (input) {
         if (input) {
@@ -2334,7 +2316,7 @@
         }
     };
 }])
-.factory('StopwatchFactory', function ($interval, localStorageService, ngAuthSettings, $rootScope, $window) {
+.factory('StopwatchFactory', function ($interval, localStorageService, ngAuthSettings, $rootScope) {
     var serviceBase = ngAuthSettings.apiServiceBaseUri;
 
     return function (options) {
@@ -2369,13 +2351,12 @@
                     //self.myStartFunction();
                     self.callgps();
                 } else { alert("No tasks") }
-            } else { alert("Assign Task"); }
+            } else { alert("Assign Task");}
         };
 
         self.stopTimer = function () {
-            
             self.Tasks1 = localStorageService.get('Tasks');
-            if (self.Tasks1 != null) {
+            if (self.Tasks1!=null) {
                 if (self.Tasks1.length > 0) {
                     for (var i = 0; i < self.Tasks1.length; i++) {
                         if (self.Tasks1[i].Status == "Delivered" || self.Tasks1[i].Status == "Delivery Canceled" || self.Tasks1[i].Status == "Delivery Redispatch") {
@@ -2397,7 +2378,6 @@
             pushToLog(currentTime - startTime);
             $interval.cancel(interval);
             self.running = false;
-            window.location = "#/OrderCurrency";
             self.stopgps();
         };
 
@@ -2420,199 +2400,4 @@
         return self;
 
     };
-})
-.controller('OrderCurrencyCtrl', function ($scope, $timeout, $stateParams, $http, $rootScope, ngAuthSettings, localStorageService, $ionicActionSheet, $state, $window, $ionicHistory, TaskService, $ionicLoading, $ionicPopup) {
-     
-    $scope.showdetails = function () {
-        var hideSheet = $ionicActionSheet.show({
-            buttons: [
-                 { text: '<i class="ion-person space"></i>Profile' },
-                 { text: '<i class="ion-ios-help-outline space"></i>Tasks' },
-                 { text: '<i class="ion-information space"></i>Assignments' },
-                 { text: '<i class="ion-archive icon_colour12 space"></i>History' },
-                  { text: '<i class="ion-archive icon_colour12 space"></i>OrderAssissment' },
-                 { text: '<i class="ion-log-out icon_colour12 space"></i>Logout' }
-            ],
-            titleText: 'Info',
-            cancelText: 'Cancel',
-            cancel: function () {
-            },
-            buttonClicked: function (index) {
-                switch (index) {
-                    case 0:
-                        $state.go('Profile');
-                        $window.location.href = ('#/profile');
-                        break;
-                    case 1:
-                        $state.go('task');
-                        $window.location.href = ('#/task');
-                        return true;
-                    case 2:
-                        $state.go('AssignedProducts');
-                        $window.location.href = ('#/AssignedProducts');
-                        break;
-                    case 3:
-                        $window.location.href = ('#/TaskHistory');
-                        break;
-                    case 4:
-                        $window.location.href = ('#/OrderAssissment');
-                        break;
-                    case 5:
-                        $rootScope.$broadcast('stop', 'Two');
-                        $ionicHistory.clearHistory();
-                        $ionicHistory.clearCache();
-                        window.localStorage.clear();
-                        //$window.location.reload(true);
-                        $window.location.href = ('#/login');
-                        return true;
-
-
-                }
-            }
-        });
-      
-        $timeout(function () {
-            hideSheet();
-        }, 9000);
-    };
-    var serviceBase = ngAuthSettings.apiServiceBaseUri;
-    $scope.ClientData = localStorageService.get('clientData');
-  
-    $scope.DeliveryIssuance = localStorageService.get('Iddel');
-  
-    $scope.data = {};
-   
-    $scope.calculat1 = function (data) {
-       // 
-        $scope.OneRupeeTotal = 1;
-        $scope.OneRupeeTotal = $scope.OneRupeeTotal * data;
-    }
-    $scope.calculat2 = function (data) {
-        $scope.TwoRupeeTotal = 2;
-        $scope.TwoRupeeTotal = $scope.TwoRupeeTotal * data;
-    }
-    $scope.calculat5 = function (data) {
-        $scope.FiveRupeeTotal = 5;
-        $scope.FiveRupeeTotal = $scope.FiveRupeeTotal * data;
-    }
-    $scope.calculat10 = function (data) {
-        $scope.TenRupeeTotal = 10;
-        $scope.TenRupeeTotal = $scope.TenRupeeTotal * data;
-    }
-    $scope.calculat20 = function (data) {
-        $scope.TwentyRupeeTotal = 20;
-        $scope.TwentyRupeeTotal = $scope.TwentyRupeeTotal * data;
-    }
-    $scope.calculat50 = function (data) {
-        $scope.fiftyRupeeTotal = 50;
-        $scope.fiftyRupeeTotal = $scope.fiftyRupeeTotal * data;
-    }
-    $scope.calculat100 = function (data) {
-        $scope.HunRupeeTotal = 100;
-        $scope.HunRupeeTotal = $scope.HunRupeeTotal * data;
-    }
-    $scope.calculat500 = function (data) {
-        $scope.fivehunRupeeTotal = 500;
-        $scope.fivehunRupeeTotal = $scope.fivehunRupeeTotal * data;
-    }
-    $scope.calculat2000 = function (data) {
-        $scope.twohunRupeeTotal = 2000;
-        $scope.twohunRupeeTotal = $scope.twohunRupeeTotal * data; 
-    }
-
-    
-    
-    if ($scope.ClientData != null) {
-
-            $scope.totalsum = 0;
-            $scope.Ttotalcount = 0;
-            $scope.OneRupeeTotal = 0;
-            $scope.TwoRupeeTotal = 0;
-            $scope.FiveRupeeTotal = 0;
-            $scope.TenRupeeTotal = 0;
-            $scope.TwentyRupeeTotal = 0;
-            $scope.fiftyRupeeTotal = 0;
-            $scope.HunRupeeTotal = 0;
-            $scope.fivehunRupeeTotal = 0;
-            $scope.twohunRupeeTotal = 0;
- 
-            //
-            $scope.data.onerscount = 0;
-            $scope.data.tworscount = 0;
-            $scope.data.fiverscount = 0;
-            $scope.data.tenrscount = 0;
-            $scope.data.Twentyrscount = 0;
-       
-            $scope.data.fiftyrscount = 0;
-            $scope.data.hunrscount = 0;
-            $scope.data.fivehrscount = 0;
-            $scope.data.twoTHrscount = 0;
-
-            $scope.total = function (data) {
-                
-                $scope.Ttotal=$scope.totalsum + $scope.OneRupeeTotal + $scope.TwoRupeeTotal + $scope.FiveRupeeTotal + $scope.TenRupeeTotal + $scope.TwentyRupeeTotal + $scope.fiftyRupeeTotal + $scope.HunRupeeTotal + $scope.fivehunRupeeTotal + $scope.twohunRupeeTotal;
-                if ($scope.Ttotal > 0) {
-            
-                    console.log(data);
-                    var url = serviceBase + "api/CurrencySettle?PeopleId=" + $scope.ClientData.PeopleID;
-                    var datatopost = {
-                        DeliveryIssuanceId: $scope.DeliveryIssuance,
-                        onerscount: $scope.data.onerscount,
-                        OneRupee: $scope.OneRupeeTotal,
-                        tworscount: $scope.data.tworscount,
-                        TwoRupee: $scope.TwoRupeeTotal,
-                        fiverscount: $scope.data.fiverscount,
-                        FiveRupee: $scope.FiveRupeeTotal,
-                        tenrscount: $scope.data.tenrscount,
-                        TenRupee: $scope.TenRupeeTotal,
-                        Twentyrscount: $scope.data.Twentyrscount,
-                        TwentyRupee: $scope.TwentyRupeeTotal,
-                        fiftyrscount: $scope.data.fiftyrscount,
-                        fiftyRupee: $scope.fiftyRupeeTotal,
-                        hunrscount: $scope.data.hunrscount,
-                        HunRupee: $scope.HunRupeeTotal,
-                        fivehrscount: $scope.data.fivehrscount,
-                        fiveHRupee: $scope.fivehunRupeeTotal,
-                        twoTHrscount: $scope.data.twoTHrscount,
-                        twoTHRupee: $scope.twohunRupeeTotal,
-                        checknumber: $scope.data.checknumber,
-                        checkamount: $scope.data.checkamount,
-                        TotalAmount: $scope.Ttotal,
-                    };
-                    console.log("datatopost", datatopost);
-                    $http.post(url, datatopost).then(function (results) {
-                      
-                        if (results.data.PeopleId != null) {
-                           
-                            $ionicPopup.alert({
-                                title: 'Alert',
-                                template: 'Assignment payment submitted'
-                            }).then(function () {
-                            });
-                            setTimeout(function () {
-                                $window.location.reload();
-                                window.location = "#/task";
-                            }, 3000);
-
-                        }
-                        else {
-                            $ionicPopup.alert({
-                                title: 'Alert',
-                                template: 'Assignment payment not submitted'
-                            }).then(function () {
-                            });
-                        }
-                    })
-                  
-                } else {
-
-                    $ionicPopup.alert({
-                        title: 'Alert',
-                        template: 'Kindly enter Amount'
-                    }).then(function () {
-                    });
-                }
-            }
-        }
-    //})
 });
