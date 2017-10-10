@@ -460,7 +460,7 @@ angular.module('app.controllers', ["LocalStorageModule"])
         }, 9000);
     };
     $scope.gettaskdetails = function (data) {
-        debugger;
+        
         // (data.Status != "Delivered" || data.Status != "Delivery Redispatch" || data.Status != "Delivery Canceled")
         if (data.Status == "Delivered") {
             TaskService._setdata(data);
@@ -473,9 +473,9 @@ angular.module('app.controllers', ["LocalStorageModule"])
                 var url = serviceBase + 'api/DeliveryTask/OrderDetail?OrderId=' + data.OrderId;
                 $http.get(url).then(function (results) {
                     $scope.data= results.data[0];
-                    debugger;
+                    
                     TaskService._setdata($scope.data);
-                    debugger;
+                    
                     $window.location.href = ('#/taskDetails/' + data.OrderId);
                 }, function (error) {
                 })
@@ -505,11 +505,11 @@ angular.module('app.controllers', ["LocalStorageModule"])
 
 .controller('taskdetailsCtrl', function ($http, localStorageService,$ionicModal, $stateParams, $scope, $ionicActionSheet, $timeout, $state, $window, $rootScope, ngAuthSettings, TaskService, $ionicPopup, $ionicLoading) {
     var serviceBase = ngAuthSettings.apiServiceBaseUri;
-    debugger;
+    
     $scope.tgshow = true;
     $scope.id = $stateParams.type;
     $scope.details = TaskService._getDetail();
-    debugger;
+    
     $scope.hide = function () {
         $ionicLoading.hide();
     };
@@ -1152,7 +1152,7 @@ angular.module('app.controllers', ["LocalStorageModule"])
             }
         }
         $scope.clickMarker = function (data) {
-            debugger;
+            
             console.log(data);
             var obj = GetSingleTask(data.id);
             TaskService._setdata(obj);
@@ -2041,7 +2041,7 @@ angular.module('app.controllers', ["LocalStorageModule"])
     }
 
     $scope.prodetails = function (items) {
-        debugger;
+        
         $scope.DBoyData = {};
         $scope.orderdetails = [];
         $scope.Orderids = [];
@@ -2126,6 +2126,8 @@ angular.module('app.controllers', ["LocalStorageModule"])
 })
 
 .controller('SummaryCtrl', function ($http, localStorageService, $stateParams, $scope, $ionicActionSheet, $timeout, $state, $window, $rootScope, ngAuthSettings, TaskService, $ionicPopup) {
+    
+
     $scope.delivereddata = [];
     $scope.cancelddata = [];
     $scope.redispatcheddata = [];
@@ -2139,7 +2141,7 @@ angular.module('app.controllers', ["LocalStorageModule"])
         var url = serviceBase + "api/vehicleassissment?ids=" + ids + "&testt=" + "testt";
         $http.get(url)
         .success(function (data) {
-            debugger;
+            
             $scope.TotalDeliveredOrder = 0;
             $scope.TotalDeliveredOrderAmount = 0;
             $scope.TotalDeliveredCashAmount = 0;
