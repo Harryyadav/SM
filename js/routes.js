@@ -2,7 +2,7 @@ angular.module('app.routes', [])
 
     .constant('ngAuthSettings', {
       //  apiServiceBaseUri: 'http://ec2-34-208-118-110.us-west-2.compute.amazonaws.com/',
-     apiServiceBaseUri: 'http://ec2-34-208-118-110.us-west-2.compute.amazonaws.com/',
+     apiServiceBaseUri: 'http://ec2-54-200-35-172.us-west-2.compute.amazonaws.com/',
        // apiServiceBaseUri: 'http://localhost:26265/',
         clientId: 'ngAuthApp'
     })
