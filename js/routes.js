@@ -132,11 +132,6 @@ angular.module('app.routes', [])
         templateUrl: 'templates/OrderAssisHistory.html',
         controller: 'AssismentCtrl'
     })
-     .state('OrderCurrency', {
-         url: '/OrderCurrency',
-         templateUrl: 'templates/OrderCurrency.html',
-         controller: 'OrderCurrencyCtrl'
-     })
     // if none of the above states are matched, use this as the fallback
     $urlRouterProvider.otherwise('/login');
 
